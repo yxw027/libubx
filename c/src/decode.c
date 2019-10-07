@@ -127,3 +127,79 @@ ubx_rc ubx_decode_rawx(const uint8_t buff[], ubx_rawx *msg_rawx) {
   }
   return RC_OK;
 }
+
+/** Deserialize the ubx_rawx message
+ *
+ * \param buff incoming data buffer
+ * \param ubx_gps_eph UBX gps eph message
+ * \return UBX return code
+ */
+ubx_rc ubx_decode_gps_eph(const uint8_t buff[], ubx_gps_eph *msg_gps_eph) {
+  assert(msg_gps_eph);
+
+  uint16_t bit = 0;
+  msg_gps_eph->class_id = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->msg_id = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->msg_type = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->version = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->sat_id = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->fit_interval = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->ura_index = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->sat_health = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->tgd = getbits(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->iode = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->toc = getbits(buff, bit, 16);
+  bit += 16;
+  getbitu(buff, bit, 8); /* reserved */
+  bit += 8;
+  msg_gps_eph->af2 = getbits(buff, bit, 8);
+  bit += 8;
+  msg_gps_eph->af1 = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->af0 = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->crs = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->delta_N = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->m0 = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->cuc = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->cus = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->e = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->sqrt_A = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->toe = getbitu(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->cic = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->omega0 = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->cis = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->crc = getbits(buff, bit, 16);
+  bit += 16;
+  msg_gps_eph->i0 = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->omega = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->omega_dot = getbits(buff, bit, 32);
+  bit += 32;
+  msg_gps_eph->i_dot = getbits(buff, bit, 16);
+  bit += 16;
+
+  return RC_OK;
+}

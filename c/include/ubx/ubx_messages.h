@@ -49,4 +49,37 @@ typedef struct {
   uint32_t track_state[MAX_NUM_SATS];
 } ubx_rawx;
 
+typedef struct {
+  uint8_t class_id;
+  uint8_t msg_id;
+  uint8_t msg_type;
+  uint8_t version;
+  uint8_t sat_id;
+  uint8_t fit_interval;
+  uint8_t ura_index;
+  uint8_t sat_health;
+  int8_t tgd;
+  uint16_t iode;
+  uint16_t toc;
+  int8_t af2;
+  int16_t af1;
+  int32_t af0;
+  int16_t crs;
+  int16_t delta_N;
+  int32_t m0;
+  int16_t cuc;
+  int16_t cus;
+  int32_t e;
+  int32_t sqrt_A;
+  uint16_t toe;
+  int16_t cic;
+  int32_t omega0;
+  int16_t cis;
+  int16_t crc;
+  int32_t i0;
+  int32_t omega;
+  int32_t omega_dot;
+  int16_t i_dot;
+} ubx_gps_eph;
+
 #endif /* SWIFTNAV_UBX_MESSAGES_H */

@@ -120,3 +120,79 @@ uint16_t ubx_encode_rawx(const ubx_rawx *msg_rawx, uint8_t buff[]) {
   }
   return bit;
 }
+
+/** Serialize the ubx_rawx message
+ *
+ * \param buff outgoing data buffer
+ * \param msg_gps_eph UBX gps eph message to serialize
+ * \return number of bits serialized
+ */
+uint16_t ubx_encode_gps_eph(const ubx_gps_eph *msg_gps_eph, uint8_t buff[]) {
+  assert(msg_gps_eph);
+
+  uint16_t bit = 0;
+  setbitu(buff, bit, 8, msg_gps_eph->class_id);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->msg_id);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->msg_type);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->version);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->sat_id);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->fit_interval);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->ura_index);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_gps_eph->sat_health);
+  bit += 8;
+  setbits(buff, bit, 8, msg_gps_eph->tgd);
+  bit += 8;
+  setbits(buff, bit, 16, msg_gps_eph->iode);
+  bit += 16;
+  setbits(buff, bit, 16, msg_gps_eph->toc);
+  bit += 16;
+  setbitu(buff, bit, 8, 0); /* reserved */
+  bit += 8;
+  setbits(buff, bit, 8, msg_gps_eph->af2);
+  bit += 8;
+  setbits(buff, bit, 16, msg_gps_eph->af1);
+  bit += 16;
+  setbits(buff, bit, 32, msg_gps_eph->af0);
+  bit += 32;
+  setbits(buff, bit, 16, msg_gps_eph->crs);
+  bit += 16;
+  setbits(buff, bit, 16, msg_gps_eph->delta_N);
+  bit += 16;
+  setbits(buff, bit, 32, msg_gps_eph->m0);
+  bit += 32;
+  setbits(buff, bit, 16, msg_gps_eph->cuc);
+  bit += 16;
+  setbits(buff, bit, 16, msg_gps_eph->cus);
+  bit += 16;
+  setbits(buff, bit, 32, msg_gps_eph->e);
+  bit += 32;
+  setbits(buff, bit, 32, msg_gps_eph->sqrt_A);
+  bit += 32;
+  setbitu(buff, bit, 16, msg_gps_eph->toe);
+  bit += 16;
+  setbits(buff, bit, 16, msg_gps_eph->cic);
+  bit += 16;
+  setbits(buff, bit, 32, msg_gps_eph->omega0);
+  bit += 32;
+  setbits(buff, bit, 16, msg_gps_eph->cis);
+  bit += 16;
+  setbits(buff, bit, 16, msg_gps_eph->crc);
+  bit += 16;
+  setbits(buff, bit, 32, msg_gps_eph->i0);
+  bit += 32;
+  setbits(buff, bit, 32, msg_gps_eph->omega);
+  bit += 32;
+  setbits(buff, bit, 32, msg_gps_eph->omega_dot);
+  bit += 32;
+  setbits(buff, bit, 16, msg_gps_eph->i_dot);
+  bit += 16;
+
+  return bit;
+}

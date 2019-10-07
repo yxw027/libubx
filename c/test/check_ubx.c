@@ -25,7 +25,7 @@
 
 #define FLOAT_EPS 1e-6
 
-void msgrawx_equals(ubx_rawx *msg_in, ubx_rawx *msg_out) {
+void msgrawx_equals(const ubx_rawx *msg_in, const ubx_rawx *msg_out) {
   ck_assert_uint_eq(msg_in->class_id, msg_out->class_id);
   ck_assert_uint_eq(msg_in->msg_id, msg_out->msg_id);
   ck_assert(fabs(msg_in->rcv_tow - msg_out->rcv_tow) < FLOAT_EPS);
@@ -35,7 +35,6 @@ void msgrawx_equals(ubx_rawx *msg_in, ubx_rawx *msg_out) {
   ck_assert_uint_eq(msg_in->version, msg_out->version);
 
   for (int i = 0; i < msg_in->num_meas; i++) {
-    printf("%f %f\n", msg_in->pseudorange_m[i], msg_out->pseudorange_m[i]);
     ck_assert(fabs(msg_in->pseudorange_m[i] - msg_out->pseudorange_m[i]) <
               FLOAT_EPS);
     ck_assert(fabs(msg_in->carrier_phase_cycles[i] -
@@ -52,6 +51,39 @@ void msgrawx_equals(ubx_rawx *msg_in, ubx_rawx *msg_out) {
     ck_assert_uint_eq(msg_in->doppler_std_hz[i], msg_out->doppler_std_hz[i]);
     ck_assert_uint_eq(msg_in->track_state[i], msg_out->track_state[i]);
   }
+}
+
+void msg_gps_eph_equals(const ubx_gps_eph *msg_in, const ubx_gps_eph *msg_out) {
+  ck_assert_uint_eq(msg_in->class_id, msg_out->class_id);
+  ck_assert_uint_eq(msg_in->msg_id, msg_out->msg_id);
+  ck_assert_uint_eq(msg_in->msg_type, msg_out->msg_type);
+  ck_assert_uint_eq(msg_in->version, msg_out->version);
+  ck_assert_uint_eq(msg_in->sat_id, msg_out->sat_id);
+  ck_assert_uint_eq(msg_in->fit_interval, msg_out->fit_interval);
+  ck_assert_uint_eq(msg_in->ura_index, msg_out->ura_index);
+  ck_assert_uint_eq(msg_in->sat_health, msg_out->sat_health);
+  ck_assert_int_eq(msg_in->tgd, msg_out->tgd);
+  ck_assert_uint_eq(msg_in->iode, msg_out->iode);
+  ck_assert_uint_eq(msg_in->toc, msg_out->toc);
+  ck_assert_int_eq(msg_in->af2, msg_out->af2);
+  ck_assert_int_eq(msg_in->af1, msg_out->af1);
+  ck_assert_int_eq(msg_in->af0, msg_out->af0);
+  ck_assert_int_eq(msg_in->crs, msg_out->crs);
+  ck_assert_int_eq(msg_in->delta_N, msg_out->delta_N);
+  ck_assert_int_eq(msg_in->m0, msg_out->m0);
+  ck_assert_int_eq(msg_in->cuc, msg_out->cuc);
+  ck_assert_int_eq(msg_in->cus, msg_out->cus);
+  ck_assert_uint_eq(msg_in->e, msg_out->e);
+  ck_assert_uint_eq(msg_in->sqrt_A, msg_out->sqrt_A);
+  ck_assert_uint_eq(msg_in->toe, msg_out->toe);
+  ck_assert_int_eq(msg_in->cic, msg_out->cic);
+  ck_assert_int_eq(msg_in->omega0, msg_out->omega0);
+  ck_assert_int_eq(msg_in->cis, msg_out->cis);
+  ck_assert_int_eq(msg_in->crc, msg_out->crc);
+  ck_assert_int_eq(msg_in->i0, msg_out->i0);
+  ck_assert_int_eq(msg_in->omega, msg_out->omega);
+  ck_assert_int_eq(msg_in->omega_dot, msg_out->omega_dot);
+  ck_assert_int_eq(msg_in->i_dot, msg_out->i_dot);
 }
 
 START_TEST(test_ubx_rawx) {
@@ -123,11 +155,61 @@ START_TEST(test_ubx_rawx) {
 
 END_TEST
 
+START_TEST(test_ubx_gps_eph) {
+
+  ubx_gps_eph msg;
+
+  msg.class_id = 0x13;
+  msg.msg_id = 0x00;
+  msg.msg_type = 0x01;
+  msg.version = 1;
+  msg.sat_id = 3;
+  msg.fit_interval = 4;
+  msg.ura_index = 9;
+  msg.sat_health = 8;
+  msg.tgd = 15;
+  msg.iode = 9;
+  msg.toc = 2512;
+  msg.af2 = 100;
+  msg.af1 = 200;
+  msg.af0 = 300;
+  msg.crs = 44;
+  msg.delta_N = 45;
+  msg.m0 = 46;
+  msg.cuc = -5;
+  msg.cus = -9;
+  msg.e = 4;
+  msg.sqrt_A = 0;
+  msg.toe = 1981;
+  msg.cic = 22;
+  msg.omega0 = 200;
+  msg.cis = 23;
+  msg.crc = 24;
+  msg.i0 = 25;
+  msg.omega = 34;
+  msg.omega_dot = 35;
+  msg.i_dot = 36;
+
+  uint8_t buff[1024];
+  memset(buff, 0, 1024);
+  ubx_encode_gps_eph(&msg, buff);
+
+  ubx_gps_eph msg_gps_eph_out;
+  int8_t ret = ubx_decode_gps_eph(buff, &msg_gps_eph_out);
+  ck_assert_int_eq(RC_OK, ret);
+  msg_gps_eph_equals(&msg, &msg_gps_eph_out);
+
+  return;
+}
+
+END_TEST
+
 Suite *ubx_suite(void) {
   Suite *s = suite_create("ubx");
 
   TCase *tc_ubx = tcase_create("ubx");
   tcase_add_test(tc_ubx, test_ubx_rawx);
+  tcase_add_test(tc_ubx, test_ubx_gps_eph);
   suite_add_tcase(s, tc_ubx);
 
   return s;
