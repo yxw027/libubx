@@ -70,12 +70,10 @@ ubx_rc ubx_decode_rawx(const uint8_t buff[], ubx_rawx *msg_rawx) {
   bit += 8;
 
   if (msg_rawx->class_id != 0x02) {
-    printf("%u %u\n", msg_rawx->class_id, 0x02);
     return RC_MESSAGE_TYPE_MISMATCH;
   }
 
   if (msg_rawx->msg_id != 0x15) {
-    printf("%u %u\n", msg_rawx->msg_id, 0x15);
     return RC_MESSAGE_TYPE_MISMATCH;
   }
 
@@ -131,6 +129,94 @@ ubx_rc ubx_decode_rawx(const uint8_t buff[], ubx_rawx *msg_rawx) {
 /** Deserialize the ubx_rawx message
  *
  * \param buff incoming data buffer
+ * \param msg_nav_pvt UBX nav pvt message
+ * \return UBX return code
+ */
+ubx_rc ubx_decode_nav_pvt(const uint8_t buff[], ubx_nav_pvt *msg_nav_pvt) {
+  assert(msg_nav_pvt);
+
+  uint16_t bit = 0;
+  msg_nav_pvt->class_id = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->msg_id = getbitu(buff, bit, 8);
+  bit += 8;
+
+  if (msg_nav_pvt->class_id != 0x01) {
+    return RC_MESSAGE_TYPE_MISMATCH;
+  }
+
+  if (msg_nav_pvt->msg_id != 0x07) {
+    return RC_MESSAGE_TYPE_MISMATCH;
+  }
+
+  msg_nav_pvt->i_tow = getbitu(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->year = getbitu(buff, bit, 16);
+  bit += 16;
+  msg_nav_pvt->month = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->day = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->hour = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->min = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->sec = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->valid = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->time_accuracy = getbitu(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->nano = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->fix_type = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->flags = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->flags2 = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->num_sats = getbitu(buff, bit, 8);
+  bit += 8;
+  msg_nav_pvt->lon = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->lat = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->height = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->height_mean_sea_level = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->horizontal_accuracy = getbitu(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->vertical_accuracy = getbitu(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->vel_north = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->vel_east = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->vel_down = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->ground_speed = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->heading_of_motion = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->PDOP = getbitu(buff, bit, 16);
+  bit += 16;
+  msg_nav_pvt->flags3 = getbitu(buff, bit, 8);
+  bit += 8;
+  /* reserved */ getbitu(buff, bit, 5);
+  bit += 5;
+  msg_nav_pvt->heading_vehicle = getbits(buff, bit, 32);
+  bit += 32;
+  msg_nav_pvt->magnetic_declination = getbits(buff, bit, 16);
+  bit += 16;
+  msg_nav_pvt->magnetic_declination_accuracy = getbitu(buff, bit, 16);
+  bit += 16;
+  return RC_OK;
+}
+
+/** Deserialize the ubx_rawx message
+ *
+ * \param buff incoming data buffer
  * \param ubx_gps_eph UBX gps eph message
  * \return UBX return code
  */
@@ -142,11 +228,22 @@ ubx_rc ubx_decode_gps_eph(const uint8_t buff[], ubx_gps_eph *msg_gps_eph) {
   bit += 8;
   msg_gps_eph->msg_id = getbitu(buff, bit, 8);
   bit += 8;
+
+  if (msg_gps_eph->class_id != 0x13) {
+    return RC_MESSAGE_TYPE_MISMATCH;
+  }
+
+  if (msg_gps_eph->msg_id != 0x00) {
+    return RC_MESSAGE_TYPE_MISMATCH;
+  }
+
   msg_gps_eph->msg_type = getbitu(buff, bit, 8);
   bit += 8;
   msg_gps_eph->version = getbitu(buff, bit, 8);
   bit += 8;
   msg_gps_eph->sat_id = getbitu(buff, bit, 8);
+  bit += 8;
+  /* reserved */ getbitu(buff, bit, 8);
   bit += 8;
   msg_gps_eph->fit_interval = getbitu(buff, bit, 8);
   bit += 8;
@@ -200,6 +297,8 @@ ubx_rc ubx_decode_gps_eph(const uint8_t buff[], ubx_gps_eph *msg_gps_eph) {
   bit += 32;
   msg_gps_eph->i_dot = getbits(buff, bit, 16);
   bit += 16;
+  /* reserved */ getbitu(buff, bit, 2);
+  bit += 2;
 
   return RC_OK;
 }

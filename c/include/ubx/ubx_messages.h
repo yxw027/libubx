@@ -82,4 +82,39 @@ typedef struct {
   int16_t i_dot;
 } ubx_gps_eph;
 
+typedef struct {
+  uint8_t class_id;
+  uint8_t msg_id;
+  uint32_t i_tow;
+  uint16_t year;
+  uint8_t month;
+  uint8_t day;
+  uint8_t hour;
+  uint8_t min;
+  uint8_t sec;
+  uint8_t valid;
+  uint32_t time_accuracy;
+  int32_t nano;
+  uint8_t fix_type;
+  uint8_t flags;
+  uint8_t flags2;
+  uint8_t flags3;
+  uint8_t num_sats;
+  int32_t lon;
+  int32_t lat;
+  int32_t height;
+  int32_t height_mean_sea_level;
+  uint32_t horizontal_accuracy;
+  uint32_t vertical_accuracy;
+  int32_t vel_north;
+  int32_t vel_east;
+  int32_t vel_down;
+  int32_t ground_speed;
+  int32_t heading_of_motion;
+  uint16_t PDOP;
+  int32_t heading_vehicle;
+  int16_t magnetic_declination;
+  uint16_t magnetic_declination_accuracy;
+} ubx_nav_pvt;
+
 #endif /* SWIFTNAV_UBX_MESSAGES_H */

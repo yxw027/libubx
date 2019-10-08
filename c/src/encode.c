@@ -121,7 +121,86 @@ uint16_t ubx_encode_rawx(const ubx_rawx *msg_rawx, uint8_t buff[]) {
   return bit;
 }
 
-/** Serialize the ubx_rawx message
+/** Serialize the ubx_nav_pvt message
+ *
+ * \param buff outgoing data buffer
+ * \param msg_nav_pvt UBX nav pvt message to serialize
+ * \return number of bits serialized
+ */
+uint16_t ubx_encode_nav_pvt(const ubx_nav_pvt *msg_nav_pvt, uint8_t buff[]) {
+  assert(msg_nav_pvt);
+
+  uint16_t bit = 0;
+  setbitu(buff, bit, 8, msg_nav_pvt->class_id);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->msg_id);
+  bit += 8;
+  setbitu(buff, bit, 32, msg_nav_pvt->i_tow);
+  bit += 32;
+  setbitu(buff, bit, 16, msg_nav_pvt->year);
+  bit += 16;
+  setbitu(buff, bit, 8, msg_nav_pvt->month);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->day);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->hour);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->min);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->sec);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->valid);
+  bit += 8;
+  setbitu(buff, bit, 32, msg_nav_pvt->time_accuracy);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->nano);
+  bit += 32;
+  setbitu(buff, bit, 8, msg_nav_pvt->fix_type);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->flags);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->flags2);
+  bit += 8;
+  setbitu(buff, bit, 8, msg_nav_pvt->num_sats);
+  bit += 8;
+  setbits(buff, bit, 32, msg_nav_pvt->lon);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->lat);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->height);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->height_mean_sea_level);
+  bit += 32;
+  setbitu(buff, bit, 32, msg_nav_pvt->horizontal_accuracy);
+  bit += 32;
+  setbitu(buff, bit, 32, msg_nav_pvt->vertical_accuracy);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->vel_north);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->vel_east);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->vel_down);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->ground_speed);
+  bit += 32;
+  setbits(buff, bit, 32, msg_nav_pvt->heading_of_motion);
+  bit += 32;
+  setbitu(buff, bit, 16, msg_nav_pvt->PDOP);
+  bit += 16;
+  setbitu(buff, bit, 8, msg_nav_pvt->flags3);
+  bit += 8;
+  setbitu(buff, bit, 5, 0); /* reserved */
+  bit += 5;
+  setbits(buff, bit, 32, msg_nav_pvt->heading_vehicle);
+  bit += 32;
+  setbits(buff, bit, 16, msg_nav_pvt->magnetic_declination);
+  bit += 16;
+  setbitu(buff, bit, 16, msg_nav_pvt->magnetic_declination_accuracy);
+  bit += 16;
+  return bit;
+}
+
+/** Serialize the ubx_gps_eph message
  *
  * \param buff outgoing data buffer
  * \param msg_gps_eph UBX gps eph message to serialize
@@ -140,6 +219,8 @@ uint16_t ubx_encode_gps_eph(const ubx_gps_eph *msg_gps_eph, uint8_t buff[]) {
   setbitu(buff, bit, 8, msg_gps_eph->version);
   bit += 8;
   setbitu(buff, bit, 8, msg_gps_eph->sat_id);
+  bit += 8;
+  setbitu(buff, bit, 8, 0); /* reserved */
   bit += 8;
   setbitu(buff, bit, 8, msg_gps_eph->fit_interval);
   bit += 8;
@@ -193,6 +274,8 @@ uint16_t ubx_encode_gps_eph(const ubx_gps_eph *msg_gps_eph, uint8_t buff[]) {
   bit += 32;
   setbits(buff, bit, 16, msg_gps_eph->i_dot);
   bit += 16;
+  setbitu(buff, bit, 2, 0); /* reserved */
+  bit += 2;
 
   return bit;
 }
