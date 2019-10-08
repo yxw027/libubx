@@ -19,7 +19,7 @@
 #include <ubx/constants.h>
 
 /* return codes for the decoders */
-typedef enum rtcm3_rc_e {
+typedef enum ubx_rc_e {
   RC_OK = 0,
   RC_MESSAGE_TYPE_MISMATCH = -1,
   RC_INVALID_MESSAGE = -2
@@ -55,12 +55,14 @@ typedef struct {
   uint8_t msg_type;
   uint8_t version;
   uint8_t sat_id;
+  uint8_t reserved1;
   uint8_t fit_interval;
   uint8_t ura_index;
   uint8_t sat_health;
   int8_t tgd;
-  uint16_t iode;
+  uint16_t iodc;
   uint16_t toc;
+  uint8_t reserved2;
   int8_t af2;
   int16_t af1;
   int32_t af0;
@@ -69,8 +71,8 @@ typedef struct {
   int32_t m0;
   int16_t cuc;
   int16_t cus;
-  int32_t e;
-  int32_t sqrt_A;
+  uint32_t e;
+  uint32_t sqrt_A;
   uint16_t toe;
   int16_t cic;
   int32_t omega0;
@@ -80,7 +82,8 @@ typedef struct {
   int32_t omega;
   int32_t omega_dot;
   int16_t i_dot;
-} ubx_gps_eph;
+  uint8_t reserved3[2];
+} ubx_mga_gps_eph;
 
 typedef struct {
   uint8_t class_id;
@@ -98,7 +101,6 @@ typedef struct {
   uint8_t fix_type;
   uint8_t flags;
   uint8_t flags2;
-  uint8_t flags3;
   uint8_t num_sats;
   int32_t lon;
   int32_t lat;
@@ -111,7 +113,11 @@ typedef struct {
   int32_t vel_down;
   int32_t ground_speed;
   int32_t heading_of_motion;
+  uint32_t speed_acc;
+  uint32_t heading_acc;
   uint16_t PDOP;
+  uint8_t flags3;
+  uint8_t reserved1[5];
   int32_t heading_vehicle;
   int16_t magnetic_declination;
   uint16_t magnetic_declination_accuracy;

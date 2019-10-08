@@ -22,7 +22,8 @@ extern "C" {
 
 ubx_rc ubx_decode_rawx(const uint8_t buff[], ubx_rawx *msg_rawx);
 ubx_rc ubx_decode_nav_pvt(const uint8_t buff[], ubx_nav_pvt *msg_nav_pvt);
-ubx_rc ubx_decode_gps_eph(const uint8_t buff[], ubx_gps_eph *msg_gps_eph);
+ubx_rc ubx_decode_mga_gps_eph(const uint8_t buff[],
+                              ubx_mga_gps_eph *msg_mga_gps_eph);
 
 #ifdef __cplusplus
 }

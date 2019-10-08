@@ -90,7 +90,8 @@ void msg_nav_pvt_equals(const ubx_nav_pvt *msg_in, const ubx_nav_pvt *msg_out) {
                     msg_in->magnetic_declination_accuracy);
 }
 
-void msg_gps_eph_equals(const ubx_gps_eph *msg_in, const ubx_gps_eph *msg_out) {
+void msg_mga_gps_eph_equals(const ubx_mga_gps_eph *msg_in,
+                            const ubx_mga_gps_eph *msg_out) {
   ck_assert_uint_eq(msg_in->class_id, msg_out->class_id);
   ck_assert_uint_eq(msg_in->msg_id, msg_out->msg_id);
   ck_assert_uint_eq(msg_in->msg_type, msg_out->msg_type);
@@ -100,7 +101,7 @@ void msg_gps_eph_equals(const ubx_gps_eph *msg_in, const ubx_gps_eph *msg_out) {
   ck_assert_uint_eq(msg_in->ura_index, msg_out->ura_index);
   ck_assert_uint_eq(msg_in->sat_health, msg_out->sat_health);
   ck_assert_int_eq(msg_in->tgd, msg_out->tgd);
-  ck_assert_uint_eq(msg_in->iode, msg_out->iode);
+  ck_assert_uint_eq(msg_in->iodc, msg_out->iodc);
   ck_assert_uint_eq(msg_in->toc, msg_out->toc);
   ck_assert_int_eq(msg_in->af2, msg_out->af2);
   ck_assert_int_eq(msg_in->af1, msg_out->af1);
@@ -192,9 +193,9 @@ START_TEST(test_ubx_rawx) {
 
 END_TEST
 
-START_TEST(test_ubx_gps_eph) {
+START_TEST(test_ubx_mga_gps_eph) {
 
-  ubx_gps_eph msg;
+  ubx_mga_gps_eph msg;
 
   msg.class_id = 0x13;
   msg.msg_id = 0x00;
@@ -205,7 +206,7 @@ START_TEST(test_ubx_gps_eph) {
   msg.ura_index = 9;
   msg.sat_health = 8;
   msg.tgd = 15;
-  msg.iode = 9;
+  msg.iodc = 9;
   msg.toc = 2512;
   msg.af2 = 100;
   msg.af1 = 200;
@@ -229,12 +230,12 @@ START_TEST(test_ubx_gps_eph) {
 
   uint8_t buff[1024];
   memset(buff, 0, 1024);
-  ubx_encode_gps_eph(&msg, buff);
+  ubx_encode_mga_gps_eph(&msg, buff);
 
-  ubx_gps_eph msg_gps_eph_out;
-  int8_t ret = ubx_decode_gps_eph(buff, &msg_gps_eph_out);
+  ubx_mga_gps_eph msg_mga_gps_eph_out;
+  int8_t ret = ubx_decode_mga_gps_eph(buff, &msg_mga_gps_eph_out);
   ck_assert_int_eq(RC_OK, ret);
-  msg_gps_eph_equals(&msg, &msg_gps_eph_out);
+  msg_mga_gps_eph_equals(&msg, &msg_mga_gps_eph_out);
 
   return;
 }
@@ -298,7 +299,7 @@ Suite *ubx_suite(void) {
   TCase *tc_ubx = tcase_create("ubx");
   tcase_add_test(tc_ubx, test_ubx_rawx);
   tcase_add_test(tc_ubx, test_ubx_nav_pvt);
-  tcase_add_test(tc_ubx, test_ubx_gps_eph);
+  tcase_add_test(tc_ubx, test_ubx_mga_gps_eph);
   suite_add_tcase(s, tc_ubx);
 
   return s;

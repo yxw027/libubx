@@ -185,12 +185,19 @@ uint16_t ubx_encode_nav_pvt(const ubx_nav_pvt *msg_nav_pvt, uint8_t buff[]) {
   bit += 32;
   setbits(buff, bit, 32, msg_nav_pvt->heading_of_motion);
   bit += 32;
+  setbitu(buff, bit, 32, msg_nav_pvt->speed_acc);
+  bit += 32;
+  setbitu(buff, bit, 32, msg_nav_pvt->heading_acc);
+  bit += 32;
   setbitu(buff, bit, 16, msg_nav_pvt->PDOP);
   bit += 16;
   setbitu(buff, bit, 8, msg_nav_pvt->flags3);
   bit += 8;
-  setbitu(buff, bit, 5, 0); /* reserved */
-  bit += 5;
+  /* reserved */
+  for (int i = 0; i < 5; i++) {
+    setbitu(buff, bit, 8, msg_nav_pvt->reserved1[i]);
+    bit += 8;
+  }
   setbits(buff, bit, 32, msg_nav_pvt->heading_vehicle);
   bit += 32;
   setbits(buff, bit, 16, msg_nav_pvt->magnetic_declination);
@@ -200,82 +207,88 @@ uint16_t ubx_encode_nav_pvt(const ubx_nav_pvt *msg_nav_pvt, uint8_t buff[]) {
   return bit;
 }
 
-/** Serialize the ubx_gps_eph message
+/** Serialize the ubx_mga_gps_eph message
  *
  * \param buff outgoing data buffer
- * \param msg_gps_eph UBX gps eph message to serialize
+ * \param msg_mga_gps_eph UBX gps eph message to serialize
  * \return number of bits serialized
  */
-uint16_t ubx_encode_gps_eph(const ubx_gps_eph *msg_gps_eph, uint8_t buff[]) {
-  assert(msg_gps_eph);
+uint16_t ubx_encode_mga_gps_eph(const ubx_mga_gps_eph *msg_mga_gps_eph,
+                                uint8_t buff[]) {
+  assert(msg_mga_gps_eph);
 
   uint16_t bit = 0;
-  setbitu(buff, bit, 8, msg_gps_eph->class_id);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->class_id);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->msg_id);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->msg_id);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->msg_type);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->msg_type);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->version);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->version);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->sat_id);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->sat_id);
   bit += 8;
-  setbitu(buff, bit, 8, 0); /* reserved */
+  /* reserved */
+  setbitu(buff, bit, 8, msg_mga_gps_eph->reserved1);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->fit_interval);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->fit_interval);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->ura_index);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->ura_index);
   bit += 8;
-  setbitu(buff, bit, 8, msg_gps_eph->sat_health);
+  setbitu(buff, bit, 8, msg_mga_gps_eph->sat_health);
   bit += 8;
-  setbits(buff, bit, 8, msg_gps_eph->tgd);
+  setbits(buff, bit, 8, msg_mga_gps_eph->tgd);
   bit += 8;
-  setbits(buff, bit, 16, msg_gps_eph->iode);
+  setbitu(buff, bit, 16, msg_mga_gps_eph->iodc);
   bit += 16;
-  setbits(buff, bit, 16, msg_gps_eph->toc);
+  setbitu(buff, bit, 16, msg_mga_gps_eph->toc);
   bit += 16;
-  setbitu(buff, bit, 8, 0); /* reserved */
+  /* reserved */
+  setbitu(buff, bit, 8, msg_mga_gps_eph->reserved2);
   bit += 8;
-  setbits(buff, bit, 8, msg_gps_eph->af2);
+  setbits(buff, bit, 8, msg_mga_gps_eph->af2);
   bit += 8;
-  setbits(buff, bit, 16, msg_gps_eph->af1);
+  setbits(buff, bit, 16, msg_mga_gps_eph->af1);
   bit += 16;
-  setbits(buff, bit, 32, msg_gps_eph->af0);
+  setbits(buff, bit, 32, msg_mga_gps_eph->af0);
   bit += 32;
-  setbits(buff, bit, 16, msg_gps_eph->crs);
+  setbits(buff, bit, 16, msg_mga_gps_eph->crs);
   bit += 16;
-  setbits(buff, bit, 16, msg_gps_eph->delta_N);
+  setbits(buff, bit, 16, msg_mga_gps_eph->delta_N);
   bit += 16;
-  setbits(buff, bit, 32, msg_gps_eph->m0);
+  setbits(buff, bit, 32, msg_mga_gps_eph->m0);
   bit += 32;
-  setbits(buff, bit, 16, msg_gps_eph->cuc);
+  setbits(buff, bit, 16, msg_mga_gps_eph->cuc);
   bit += 16;
-  setbits(buff, bit, 16, msg_gps_eph->cus);
+  setbits(buff, bit, 16, msg_mga_gps_eph->cus);
   bit += 16;
-  setbits(buff, bit, 32, msg_gps_eph->e);
+  setbitu(buff, bit, 32, msg_mga_gps_eph->e);
   bit += 32;
-  setbits(buff, bit, 32, msg_gps_eph->sqrt_A);
+  setbitu(buff, bit, 32, msg_mga_gps_eph->sqrt_A);
   bit += 32;
-  setbitu(buff, bit, 16, msg_gps_eph->toe);
+  setbitu(buff, bit, 16, msg_mga_gps_eph->toe);
   bit += 16;
-  setbits(buff, bit, 16, msg_gps_eph->cic);
+  setbits(buff, bit, 16, msg_mga_gps_eph->cic);
   bit += 16;
-  setbits(buff, bit, 32, msg_gps_eph->omega0);
+  setbits(buff, bit, 32, msg_mga_gps_eph->omega0);
   bit += 32;
-  setbits(buff, bit, 16, msg_gps_eph->cis);
+  setbits(buff, bit, 16, msg_mga_gps_eph->cis);
   bit += 16;
-  setbits(buff, bit, 16, msg_gps_eph->crc);
+  setbits(buff, bit, 16, msg_mga_gps_eph->crc);
   bit += 16;
-  setbits(buff, bit, 32, msg_gps_eph->i0);
+  setbits(buff, bit, 32, msg_mga_gps_eph->i0);
   bit += 32;
-  setbits(buff, bit, 32, msg_gps_eph->omega);
+  setbits(buff, bit, 32, msg_mga_gps_eph->omega);
   bit += 32;
-  setbits(buff, bit, 32, msg_gps_eph->omega_dot);
+  setbits(buff, bit, 32, msg_mga_gps_eph->omega_dot);
   bit += 32;
-  setbits(buff, bit, 16, msg_gps_eph->i_dot);
+  setbits(buff, bit, 16, msg_mga_gps_eph->i_dot);
   bit += 16;
-  setbitu(buff, bit, 2, 0); /* reserved */
-  bit += 2;
+  /* reserved */
+  for (int i = 0; i < 2; i++) {
+    setbitu(buff, bit, 8, msg_mga_gps_eph->reserved3[i]);
+    bit += 8;
+  }
 
   return bit;
 }
