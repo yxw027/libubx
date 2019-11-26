@@ -162,7 +162,7 @@ uint16_t ubx_encode_nav_pvt(const ubx_nav_pvt *msg_nav_pvt, uint8_t buff[]) {
   index += 1;
   memcpy(&buff[index], &msg_nav_pvt->valid, 1);
   index += 1;
-  memcpy(&buff[index], &msg_nav_pvt->time_accuracy, 4);
+  memcpy(&buff[index], &msg_nav_pvt->time_acc, 4);
   index += 4;
   memcpy(&buff[index], &msg_nav_pvt->nano, 4);
   index += 4;

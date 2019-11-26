@@ -182,11 +182,11 @@ ubx_rc ubx_decode_nav_pvt(const uint8_t buff[], ubx_nav_pvt *msg_nav_pvt) {
   ubx_get_bytes(buff, byte, 1, (u8 *)&msg_nav_pvt->msg_id);
   byte += 1;
 
-  if (msg_nav_pvt->class_id != 0x01) {
+  if (msg_nav_pvt->class_id != UBX_CLASS_NAV) {
     return RC_MESSAGE_TYPE_MISMATCH;
   }
 
-  if (msg_nav_pvt->msg_id != 0x07) {
+  if (msg_nav_pvt->msg_id != UBX_MSG_NAV_PVT) {
     return RC_MESSAGE_TYPE_MISMATCH;
   }
 
@@ -209,7 +209,7 @@ ubx_rc ubx_decode_nav_pvt(const uint8_t buff[], ubx_nav_pvt *msg_nav_pvt) {
   byte += 1;
   ubx_get_bytes(buff, byte, 1, (u8 *)&msg_nav_pvt->valid);
   byte += 1;
-  ubx_get_bytes(buff, byte, 4, (u8 *)&msg_nav_pvt->time_accuracy);
+  ubx_get_bytes(buff, byte, 4, (u8 *)&msg_nav_pvt->time_acc);
   byte += 4;
   ubx_get_bytes(buff, byte, 4, (u8 *)&msg_nav_pvt->nano);
   byte += 4;

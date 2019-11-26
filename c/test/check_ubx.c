@@ -64,7 +64,7 @@ void msg_nav_pvt_equals(const ubx_nav_pvt *msg_in, const ubx_nav_pvt *msg_out) {
   ck_assert_uint_eq(msg_in->min, msg_in->min);
   ck_assert_uint_eq(msg_in->sec, msg_in->sec);
   ck_assert_uint_eq(msg_in->valid, msg_in->valid);
-  ck_assert_uint_eq(msg_in->time_accuracy, msg_in->time_accuracy);
+  ck_assert_uint_eq(msg_in->time_acc, msg_in->time_acc);
   ck_assert_uint_eq(msg_in->nano, msg_in->nano);
   ck_assert_uint_eq(msg_in->fix_type, msg_in->fix_type);
   ck_assert_uint_eq(msg_in->flags, msg_in->flags);
@@ -314,7 +314,7 @@ START_TEST(test_ubx_nav_pvt) {
   msg.min = 59;
   msg.sec = 1;
   msg.valid = 0xFF;
-  msg.time_accuracy = 432;
+  msg.time_acc = 432;
   msg.nano = -3579;
   msg.fix_type = 4;
   msg.flags = 0xFA;

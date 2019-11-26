@@ -114,7 +114,7 @@ typedef struct {
   uint8_t min;
   uint8_t sec;
   uint8_t valid;
-  uint32_t time_accuracy;
+  uint32_t time_acc;
   int32_t nano;
   uint8_t fix_type;
   uint8_t flags;
